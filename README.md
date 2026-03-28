@@ -1,93 +1,75 @@
-# 42 Push-Swap
+# 42 Push Swap
 
-`push_swap` is a sorting algorithm project where you must sort a stack of integers using a minimal set of operations. You write two programs:
+## Overview
+Push Swap sorts a stack of integers using a limited set of operations while minimizing the number of moves.
 
-1. **push_swap** – calculates and prints the list of operations to sort the given numbers.
-2. **checker** – reads a list of operations and verifies whether they sort the stack correctly.
+The project includes:
+- push_swap: generates sorting operations
+- checker (or checker_linux): validates an operation sequence
 
----
-
-## Table of Contents
-
-- [Features](#features)  
-- [Usage](#usage)  
-  - [Compile the library](#compile-the-library)  
-  - [Running push_swap](#running-push_swap)  
-  - [Running checker](#running-checker)  
-- [Rules & Operations](#rules--operations)  
-- [Project Structure](#project-structure)  
-- [Author](#author)  
-- [License](#license)  
-
----
+This project is a constrained-operations optimization problem: correctness is mandatory, but performance is measured by operation count.
 
 ## Features
+- Input validation:
+  - integer format
+  - duplicate detection
+  - 32-bit range checks
+- Stack operations:
+  - sa sb ss
+  - pa pb
+  - ra rb rr
+  - rra rrb rrr
+- Optimized strategies for:
+  - small stacks
+  - larger datasets
+- Bonus checker support
 
-- Validates input (integers only, no duplicates, within 32-bit range).  
-- Supports the following operations:
-  - **Swap:** `sa`, `sb`, `ss`  
-  - **Push:** `pa`, `pb`  
-  - **Rotate:** `ra`, `rb`, `rr`  
-  - **Reverse Rotate:** `rra`, `rrb`, `rrr`  
-- Optimized for minimal moves on small (2–5 elems) and large stacks.  
+## Core Idea
+Instead of directly sorting with normal algorithms, push_swap must sort using only the allowed stack operations. This forces algorithm design around operation economics.
 
----
+Typical strategy split:
+- small N: hardcoded or near-hardcoded optimal sequences
+- larger N: indexing/chunking/radix-like approaches to reduce moves consistently
 
-## Usage
+## Why Validation Is Critical
+Input handling strongly affects reliability. The implementation validates:
+- numeric format
+- duplicates
+- integer range
+- edge cases such as empty or malformed argument combinations
 
-### Compile the library (bash)
+On invalid input, the program should fail deterministically with the expected behavior.
 
-```
-git clone https://github.com/RubBarkhudaryan/42-Push-Swap.git
-cd 42-Push-Swap
-make
-```
+## Build
+- make
 
-# This builds:
+## Run
+- ./push_swap 3 2 5 1 4
 
-**push_swap (your main sorting program)**, **checker_linux (the checker for Linux)**
+Check result:
+- ./push_swap 3 2 5 1 4 | ./checker_linux 3 2 5 1 4
 
-Running push_swap
-bash
-Копировать
-Редактировать
-./push_swap 3 2 5 1 4
-It will print a sequence of operations, one per line, that, when applied to the stack, sorts it in ascending order.
+Quick benchmarking idea:
+- generate random datasets
+- count emitted operations
+- compare against 42 scoring thresholds
 
-## Running checker
-You can pipe operations into the checker to verify:
-# Example: check a correct solution
-./push_swap 3 2 5 1 4 | ./checker_linux 3 2 5 1 4
-# Output should be "OK"
+## Project Structure
+- src: main sorting and operation logic
+- libft: shared helpers
+- bonus: checker and bonus logic
+- Makefile: build automation
 
-# Example: check an incorrect sequence
-echo -e "sa\nra\npb" | ./checker_linux 3 2 5 1 4
-# Output should be "KO"
+Internal components usually include:
+- parser/validator
+- stack representation
+- primitive operations
+- sorting strategy controller
 
-## Rules & Operations
-# No global variables
+## Key Learnings
+- Algorithmic optimization under operation constraints
+- Data structure manipulation and indexing strategies
+- Input safety and deterministic error handling
 
-Allowed functions: only those you implement in your own libft (no <stdlib.h> conversion helpers, except for memory management)
-Memory leaks must be avoided
-Errors (invalid input, memory failures) must print Error\n to stderr and exit with status 1
-
-# Project Structure
-
-```
-42-Push-Swap/
-├── bonus/               # Optional extra features
-├── libft/               # Your custom libft with helpers
-├── src/                 # All push_swap and checker sources
-│   ├── ps_main.c
-│   ├── ps_validation.c
-│   ├── ps_init_stack.c
-│   ├── ps_sort_stack.c
-|   ├── pushswap.h       
-│   ├── ... (ops, utils, indexing)
-├── checker_linux        # Built checker executable
-├── push_swap            # Built push_swap executable
-├── Makefile
-└── README.md
-```
-**Author
-Rub Barkhudaryan**
+## Notes
+Push Swap teaches how to balance algorithmic complexity and practical operation cost under strict rules.
